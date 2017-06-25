@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import core.db.DataBase;
+import next.dao.UserDao;
 import next.model.User;
 
 public class LoginController implements Controller {
@@ -15,7 +15,8 @@ public class LoginController implements Controller {
 		String password = request.getParameter("password");
 		String redirectPage = "redirect:/user/login_failed";
 		
-		User user = DataBase.findUserById(userId);
+		UserDao userDao = new UserDao();
+		User user = userDao.findByUserId(userId);
 		
 		if(user != null && user.getPassword().equals(password)) {
 			HttpSession session  = request.getSession();

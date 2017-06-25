@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import core.db.DataBase;
+import next.dao.UserDao;
 
 public class ListController implements Controller {
 
@@ -14,9 +14,10 @@ public class ListController implements Controller {
 		Object userSession = session.getAttribute("user");
 		
 		String returnPage = "redirect:/user/loginForm" ;
-
+		UserDao userDao = new UserDao();
+		
 		if (userSession != null) {
-			request.setAttribute("users", DataBase.findAll());
+			request.setAttribute("users", userDao.findAll());
 			returnPage = "/user/list.jsp";
 		}
 		
