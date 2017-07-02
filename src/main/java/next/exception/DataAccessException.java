@@ -6,10 +6,6 @@ public class DataAccessException extends RuntimeException {
 		super();
 	}
 
-	public DataAccessException(Exception e) {
-		super(e);
-	}
-	
 	public DataAccessException(String msg) {
 		super(msg);
 	}

@@ -1,6 +1,7 @@
 package next.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -37,6 +38,16 @@ public class UserDaoTest {
 	public void UpdateTest() throws Exception {
 		User updateUser = new User("userId", "password2", "name2", "javajigi@email.com");
 		userDao.update(updateUser);
+
+		User user = userDao.findByUserId("userId");
+		assertEquals(updateUser, user);
 	}
 
+	@Test
+	public void test() {
+		String abc = new String("abc").intern();
+		String abc1 = "abc";
+		
+		assertTrue(abc == abc1);
+	}
 }

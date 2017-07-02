@@ -13,7 +13,7 @@ import next.exception.DataAccessException;
 public class JdbcTemplate {
 	public void update(String query, PreparedStatementSetter pstmtSetter) {
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pstmt = con.prepareStatement(query);) {
+				PreparedStatement pstmt = con.prepareStatement(query)) {
 
 			pstmtSetter.setValues(pstmt);
 			pstmt.executeUpdate();
@@ -24,7 +24,7 @@ public class JdbcTemplate {
 
 	public void update(String query, Object... params) {
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pstmt = con.prepareStatement(query);) {
+				PreparedStatement pstmt = con.prepareStatement(query)) {
 
 			for (int index = 0; index < params.length; index++) {
 				pstmt.setObject(index + 1, params[index]);
@@ -62,13 +62,14 @@ public class JdbcTemplate {
 		List<T> resultList = new ArrayList<T>();
 
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pstmt = con.prepareStatement(query);) {
+				PreparedStatement pstmt = con.prepareStatement(query)) {
 
 			pstmtSetter.setValues(pstmt);
-			ResultSet rs = pstmt.executeQuery();
 
-			while (rs.next()) {
-				resultList.add(mapper.mapRow(rs));
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					resultList.add(mapper.mapRow(rs));
+				}
 			}
 		} catch (SQLException e) {
 			throw new DataAccessException(e);
@@ -81,16 +82,15 @@ public class JdbcTemplate {
 		List<T> resultList = new ArrayList<T>();
 
 		try (Connection con = ConnectionManager.getConnection();
-				PreparedStatement pstmt = con.prepareStatement(query);) {
-
+				PreparedStatement pstmt = con.prepareStatement(query)) {
 			for (int index = 0; index < params.length; index++) {
 				pstmt.setObject(index + 1, params[index]);
 			}
 
-			ResultSet rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				resultList.add(mapper.mapRow(rs));
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					resultList.add(mapper.mapRow(rs));
+				}
 			}
 		} catch (SQLException e) {
 			throw new DataAccessException(e);
